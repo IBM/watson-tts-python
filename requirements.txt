@@ -1,0 +1,2 @@
+ibm_watson>=4.7.1
+configparser>=5.0.0

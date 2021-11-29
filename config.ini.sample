@@ -1,0 +1,33 @@
+[TextToSpeech]
+apikey=xxxxxxxxx-xxxxx-xxxxx-xxxxxxxxxxx
+service_url=https://....
+use_bearer_token=False
+voice=en-US_MichaelV3Voice
+;customization_id=xxxxxxxxx-xxxxx-xxxxx-xxxxxxxxxxx
+
+[Synthesis]
+output_dir=transcriptions
+output_file_type=mp3
+input_file = inputfile_to_transcribe.csv
+overwrite = True
+
+[Pronunciation]
+input_file = words_to_pronounce.txt
+#ipa or ibm
+phonetic = ipa
+#This file is suitable for use in [Synthesis] as `input_file`
+output_file=tts_pronounce.csv
+
+[Assistant]
+#This file is suitable for use in [Synthesis] as `input_file`
+extracted_skill_text_file=inputfile_to_transcribe.csv
+
+#Exported JSON from Watson Assistant
+skill_json_file=myskill.json
+
+#These are only used if `skill_json_file` is not set
+apikey=xxxxxxxxx-xxxxx-xxxxx-xxxxxxxxxxx
+service_url=https://....
+use_bearer_token=False
+workspace_id=xxxxxxxxx-xxxxx-xxxxx-xxxxxxxxxxx
+
