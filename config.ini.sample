@@ -1,33 +1,50 @@
 [TextToSpeech]
+# Connection parameters to your Text to Speech instance
 apikey=xxxxxxxxx-xxxxx-xxxxx-xxxxxxxxxxx
 service_url=https://....
+# `use_bearer_token` is only True in Cloud Pak installations, False otherwise
 use_bearer_token=False
+# Voices from https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices
 voice=en-US_MichaelV3Voice
+# Using a customized Text to Speech model is optional
 ;customization_id=xxxxxxxxx-xxxxx-xxxxx-xxxxxxxxxxx
 
 [Synthesis]
+# Directory to store output, will be created if needed
 output_dir=transcriptions
+# File types from https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-audio-formats#formats-supported
 output_file_type=mp3
+# CSV file with two columns: 'id' (used for creating a file with audio), 'text' (the text to synthesize)
 input_file = inputfile_to_transcribe.csv
+# True to overwrite existing audio files, False otherwise
 overwrite = True
 
 [Pronunciation]
+# Simple text file with one phrase per line
 input_file = words_to_pronounce.txt
-#ipa or ibm
+# Phonetics from https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-symbols
+# Use 'ipa' for International Phonetic Alphabet (IPA) and 'ibm' for IBM Symbolic Phonetic Representation
 phonetic = ipa
-#This file is suitable for use in [Synthesis] as `input_file`
+# Output file contains two columns, 'id' and 'text'
+# This file is suitable for use in [Synthesis] as `input_file`
 output_file=tts_pronounce.csv
 
 [Assistant]
-#This file is suitable for use in [Synthesis] as `input_file`
+# Output CSV file with two columns: 'id' (used for creating a file with audio), 'text' (the text to synthesize)
+# This file is suitable for use in [Synthesis] as `input_file`
 extracted_skill_text_file=inputfile_to_transcribe.csv
 
-#Exported JSON from Watson Assistant
+# Provide either an exported copy of your Watson Assistant skill OR connection details to read the skill online
+# Exported JSON from Watson Assistant
 skill_json_file=myskill.json
 
-#These are only used if `skill_json_file` is not set
+# Connection parameters to your Watson Assistant instance
+# These are only used if `skill_json_file` is not set
 apikey=xxxxxxxxx-xxxxx-xxxxx-xxxxxxxxxxx
 service_url=https://....
-use_bearer_token=False
 workspace_id=xxxxxxxxx-xxxxx-xxxxx-xxxxxxxxxxx
+
+# `use_bearer_token` is only True in Cloud Pak installations, False otherwise
+use_bearer_token=False
+
 
