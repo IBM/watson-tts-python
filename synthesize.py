@@ -11,7 +11,7 @@ class Synthesizer:
     def __init__(self, config):
         self.config = config
         self.TTS = self.createTTS()
-        self.transcription_count = 0
+        self.synthesis_count = 0
 
     def createTTS(self):
         return WatsonObjects(self.config).createTTS()
@@ -53,13 +53,13 @@ class Synthesizer:
                         accept='audio/' + type,
                         customization_id=customization_id     
                     ).get_result().content)
-                self.transcription_count += 1
+                self.synthesis_count += 1
                 print("Wrote {}".format(output_filename))
             except:
-                print(f"Error transcribing for {output_filename} with text '{text}'")
+                print(f"Error synthesizing for {output_filename} with text '{text}'")
 
     def report(self):
-        print("Wrote {} transcriptions".format(self.transcription_count))
+        print("Wrote {} syntheses".format(self.synthesis_count))
 
 def main():
     config_file = "config.ini"

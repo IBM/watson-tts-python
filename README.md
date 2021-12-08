@@ -24,9 +24,9 @@ voice=en-US_MichaelV3Voice
 ;customization_id=xxxxxxxxx-xxxxx-xxxxx-xxxxxxxxxxx
 
 [Synthesis]
-output_dir=transcriptions
+output_dir=synthesis
 output_file_type=mp3
-input_file = inputfile_to_transcribe.csv
+input_file = inputfile_to_synthesize.csv
 overwrite = True
 ```
 
