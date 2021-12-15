@@ -11,11 +11,11 @@ voice=en-US_MichaelV3Voice
 
 [Synthesis]
 # Directory to store output, will be created if needed
-output_dir=transcriptions
+output_dir=synthesis
 # File types from https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-audio-formats#formats-supported
 output_file_type=mp3
 # CSV file with two columns: 'id' (used for creating a file with audio), 'text' (the text to synthesize)
-input_file = inputfile_to_transcribe.csv
+input_file = inputfile_to_synthesize.csv
 # True to overwrite existing audio files, False otherwise
 overwrite = True
 
@@ -32,7 +32,7 @@ output_file=tts_pronounce.csv
 [Assistant]
 # Output CSV file with two columns: 'id' (used for creating a file with audio), 'text' (the text to synthesize)
 # This file is suitable for use in [Synthesis] as `input_file`
-extracted_skill_text_file=inputfile_to_transcribe.csv
+extracted_skill_text_file=inputfile_to_synthesize.csv
 
 # Provide either an exported copy of your Watson Assistant skill OR connection details to read the skill online
 # Exported JSON from Watson Assistant

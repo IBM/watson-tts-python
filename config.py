@@ -1,10 +1,5 @@
 import configparser
 
-STT_SECTION_KEY="SpeechToText"
-TRANSCRIPTIONS_SECTION_KEY="Transcriptions"
-OUTPUT_SECTION_KEY="ErrorRateOutput"
-TRANSFORMATIONS_SECTION_KEY="Transformations"
-
 class Config:
     config = None
 
