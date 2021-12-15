@@ -1,0 +1,9 @@
+*.wav
+*.mp3
+config.ini
+__pycache__
+*.csv
+*.json
+*.txt
+.vscode
+synthesis/*
