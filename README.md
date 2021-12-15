@@ -1,6 +1,9 @@
 # TTS-Python-Tool
 TTS Python tools to assist customers in experimentation and configuration
 
+Some sample files are available under the "template-samples" sub-folder.
+There is an evaluation template spreadsheet to help document feedback from reviewers
+
 ## synthesize.py
 Takes an input CSV file with IDs and text, synthesizes each text into an audio file as specified by the ID.  Global configuration is updated in `config.ini` file.
 
