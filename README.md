@@ -4,6 +4,30 @@ TTS Python tools to assist customers in experimentation and configuration
 Some sample files are available under the "template-samples" sub-folder.
 There is an evaluation template spreadsheet to help document feedback from reviewers
 
+## Installation
+Requires Python 3.x installation.
+
+All of the watson-tts-python dependencies are installed at once with `pip`:
+
+```
+pip install -r requirements.txt
+```
+
+**Note:**  If receiving an SSL Certificate error (CERTIFICATE_VERIFY_FAILED) when running the python scripts, try the following commands to tell python to use the system certificate store.
+
+**_Windows_**
+```
+pip install --trusted-host pypi.org --trustedhost files.python.org python-certifi-win32
+```
+
+**_MacOS_**
+
+Open a terminal Windows and change to the location of your python installation
+```
+cd /Applications/Python 3.6
+./Install Certificates.command
+```
+
 ## synthesize.py
 Takes an input CSV file with IDs and text, synthesizes each text into an audio file as specified by the ID.  Global configuration is updated in `config.ini` file.
 
