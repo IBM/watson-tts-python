@@ -42,6 +42,8 @@ Will produce output files quickbrown.wav and lazydog.wav
 
 Use `config.ini` to specify information about your text to speech service and model in `[TextToSpeech]` section.  Specify output details into `[Synthesis]` section.
 
+If `reference_transcriptions_file` is provided, the synthesis builds a reference file for use in [watson-stt-wer-python](https://github.com/IBM/watson-stt-wer-python).
+
 ```
 [TextToSpeech]
 apikey=xxxxxxxxx-xxxxx-xxxxx-xxxxxxxxxxx
@@ -55,6 +57,8 @@ output_dir=synthesis
 output_file_type=mp3
 input_file = inputfile_to_synthesize.csv
 overwrite = True
+#Optional
+reference_transcriptions_file=reference_transcriptions.csv
 ```
 
 ## pronounce.py
@@ -85,7 +89,13 @@ Example output file:
 
 
 ## extract_skill_text.py
-Takes a Watson Assistant skill and extracts all of the text "spoken" by the assistant.  The output file from this process is suitable for passing as an input file to `synthesize.py`.
+Takes a Watson Assistant skill and extracts types of text requested in the configuration file.
+There are three options:
+* all of the output text "spoken" by the assistant (`extract_dialog`)
+* all of the intent training text (`extract_intents`)
+* all of the entity training text (`extract_entities`)
+
+The output file from this process is suitable for passing as an input file to `synthesize.py`.  The dialog text is useful for inspecting what Watson Assistant will sound like, the intent/entity text is useful for bootstrapping test data for [watson-stt-wer-python](https://github.com/IBM/watson-stt-wer-python).
 
 Example output file:
 
@@ -109,4 +119,9 @@ apikey=xxxxxxxxx-xxxxx-xxxxx-xxxxxxxxxxx
 service_url=https://....
 use_bearer_token=False
 workspace_id=xxxxxxxxx-xxxxx-xxxxx-xxxxxxxxxxx
+
+#Which data to extrat
+extract_dialog = True
+extract_intents = False
+extract_entities = False
 ```

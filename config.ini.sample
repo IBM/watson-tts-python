@@ -19,6 +19,9 @@ input_file = inputfile_to_synthesize.csv
 # True to overwrite existing audio files, False otherwise
 overwrite = True
 
+#Optional parameter, if provided, creates a reference file for watson-stt-wer-python process
+reference_transcriptions_file=reference_transcriptions.csv
+
 [Pronunciation]
 # Simple text file with one phrase per line
 input_file = words_to_pronounce.txt
@@ -30,6 +33,13 @@ phonetic = ipa
 output_file=tts_pronounce.csv
 
 [Assistant]
+# WA dialog extraction - useful for listening to how Watson Assistant output sounds, to test system output
+extract_dialog = True
+
+# WA training data extraction - useful for bootstrapping audio of Watson Assistant training data (inputs), to simulate user input
+extract_intents = False
+extract_entities = False
+
 # Output CSV file with two columns: 'id' (used for creating a file with audio), 'text' (the text to synthesize)
 # This file is suitable for use in [Synthesis] as `input_file`
 extracted_skill_text_file=inputfile_to_synthesize.csv
