@@ -12,6 +12,7 @@ class Synthesizer:
         self.config = config
         self.TTS = self.createTTS()
         self.synthesis_count = 0
+        self.tuples = []
 
     def createTTS(self):
         return WatsonObjects(self.config).createTTS()
@@ -32,6 +33,7 @@ class Synthesizer:
             text = line[1]
             filename = f'{output_dir}/{line[0]}.{type}'
             self.synthesize_text_to_file(text, filename)
+            self.tuples.append({"Audio File Name": filename, "Reference": text})
 
     def synthesize_text_to_file(self, text, output_filename):
         overwrite = self.config.getBoolean("Synthesis", "overwrite")
@@ -60,6 +62,16 @@ class Synthesizer:
 
     def report(self):
         print("Wrote {} syntheses".format(self.synthesis_count))
+
+        reference_transcriptions_file = self.config.getValue("Synthesis", "reference_transcriptions_file")
+        if reference_transcriptions_file:
+            keys = self.tuples[0].keys()
+
+            with open(reference_transcriptions_file, 'w', newline='') as output_file:
+                dict_writer = csv.DictWriter(output_file, keys)
+                dict_writer.writeheader()
+                dict_writer.writerows(self.tuples)
+                print(f"Wrote STT reference output to {reference_transcriptions_file}")
 
 def main():
     config_file = "config.ini"
