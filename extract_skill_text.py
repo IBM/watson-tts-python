@@ -41,9 +41,52 @@ class SkillExtractor:
     def getTextInFile(self, file:str):
         with open(file, 'r') as jsonFile:
             data = json.load(jsonFile)
-            return self.getTextInSkill(data)
+            tuples = []
+            if self.config.getBoolean("Assistant", "extract_dialog") or "extract_dialog" not in self.config.getKeys("Assistant"):
+                tuples.extend(self.getOutputTextInSkill(data))
+            
+            if self.config.getBoolean("Assistant", "extract_intents"):
+                tuples.extend(self.getIntentTextInSkill(data))
 
-    def getTextInSkill(self, data:json):
+            if self.config.getBoolean("Assistant", "extract_entities"):
+                tuples.extend(self.getEntityTextInSkill(data))
+
+            return tuples
+
+    def getIntentTextInSkill(self, data:json):
+        interesting_text = []
+        if 'intents' in data:
+            for node in data['intents']:
+                if 'examples' in node:
+                    for example in node['examples']:
+                        interesting_text.append(example['text'])
+
+        tuples = []
+        for text in interesting_text:
+            id = "".join([x if x.isalnum() else "_" for x in text])
+            tuples.append({'id': id, 'text':text})
+        return tuples
+
+    def getEntityTextInSkill(self, data:json):
+        interesting_text = []
+        #All entity examples and synonyms
+        if 'entities' in data:
+            for node in data['entities']:
+                if 'values' in node:
+                    for v in node['values']:
+                        if 'value' in v:
+                            interesting_text.append(v['value'])
+                        if 'synonyms' in v:
+                            for synonym in v['synonyms']:
+                                interesting_text.append(synonym)
+        
+        tuples = []
+        for text in interesting_text:
+            id = "".join([x if x.isalnum() else "_" for x in text])
+            tuples.append({'id': id, 'text':text})
+        return tuples
+
+    def getOutputTextInSkill(self, data:json):
         tuples = []
         dialog_node_list = data['dialog_nodes']
         for dialog_node in dialog_node_list:
