@@ -42,6 +42,8 @@ Will produce output files quickbrown.wav and lazydog.wav
 
 Use `config.ini` to specify information about your text to speech service and model in `[TextToSpeech]` section.  Specify output details into `[Synthesis]` section.
 
+If `voice` is set to `random` then a random voice will be selected from: `en-US_MichaelV3Voice', 'en-US_AllisonV3Voice', 'en-US_EmilyV3Voice', 'en-US_HenryV3Voice', 'en-US_KevinV3Voice', 'en-US_LisaV3Voice', 'en-US_OliviaV3Voice`
+
 If `reference_transcriptions_file` is provided, the synthesis builds a reference file for use in [watson-stt-wer-python](https://github.com/IBM/watson-stt-wer-python).
 
 ```

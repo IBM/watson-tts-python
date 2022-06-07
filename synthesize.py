@@ -2,6 +2,7 @@ import os
 import os.path
 import sys
 import csv
+import random
 from config import Config
 
 from watson_objects import WatsonObjects
@@ -45,6 +46,11 @@ class Synthesizer:
         voice            = self.config.getValue("TextToSpeech", "voice")
         customization_id = self.config.getValue("TextToSpeech", "customization_id")
         type             = self.config.getValue("Synthesis", "output_file_type")
+
+        # Use a random voice if voice is set to "random"
+        if voice == "random":
+            voices = ['en-US_MichaelV3Voice', 'en-US_AllisonV3Voice', 'en-US_EmilyV3Voice', 'en-US_HenryV3Voice', 'en-US_KevinV3Voice', 'en-US_LisaV3Voice', 'en-US_OliviaV3Voice']
+            voice = random.choice(voices)
 
         with open(output_filename, 'wb') as audio_file:
             try: 
