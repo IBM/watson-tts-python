@@ -28,7 +28,6 @@ class Synthesizer:
         output_dir = self.config.getValue("Synthesis", "output_dir")
         voice            = self.config.getValue("TextToSpeech", "voice")
         voice_selection_mode            = self.config.getValue("TextToSpeech", "voice_selection_mode")
-        add_voice_to_filename            = self.config.getValue("TextToSpeech", "add_voice_to_filename")
         
         if voice_selection_mode == "":
             voice_selection_mode = "all"
@@ -44,10 +43,7 @@ class Synthesizer:
             # pick a random voice
             if voice_selection_mode.lower() == "random" and voice_list[0]:
                 voice = random.choice(voice_list)
-                if add_voice_to_filename == "True":
-                    filename = f'{output_dir}/{line[0]}-{voice}.{type}'
-                else:
-                    filename = f'{output_dir}/{line[0]}.{type}'
+                filename = f'{output_dir}/{line[0]}-{voice}.{type}'
                 self.synthesize_text_to_file(text, filename, voice)
                 self.tuples.append({"Audio File Name": filename, "Reference": text})
 

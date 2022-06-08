@@ -6,6 +6,9 @@ service_url=https://....
 use_bearer_token=False
 # Voices from https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices
 voice=en-US_MichaelV3Voice
+;voice=en-US_MichaelV3Voice,en-US_AllisonV3Voice,en-US_EmilyV3Voice,en-US_HenryV3Voice,en-US_KevinV3Voice,en-US_LisaV3Voice,en-US_OliviaV3Voice
+voice_selection_mode=all
+;voice_selection_mode=random
 # Using a customized Text to Speech model is optional
 ;customization_id=xxxxxxxxx-xxxxx-xxxxx-xxxxxxxxxxx
 
