@@ -2,6 +2,7 @@ import os
 import os.path
 import sys
 import csv
+import random
 from config import Config
 
 from watson_objects import WatsonObjects
@@ -25,24 +26,55 @@ class Synthesizer:
         
         type       = self.config.getValue("Synthesis", "output_file_type")
         output_dir = self.config.getValue("Synthesis", "output_dir")
+        voice            = self.config.getValue("TextToSpeech", "voice")
+        voice_selection_mode            = self.config.getValue("TextToSpeech", "voice_selection_mode")
+        
+        if voice_selection_mode == "" or not voice_selection_mode:
+            voice_selection_mode = "all"
+
+        if voice == "" or not voice:
+                print("Error: invalid voice")
+        else:
+            voice_list = voice.split(",")
+
+        
 
         os.makedirs(output_dir, exist_ok=True)
 
         for line in data:
             if line[0]=='id': continue #Ignore header row
             text = line[1]
-            filename = f'{output_dir}/{line[0]}.{type}'
-            self.synthesize_text_to_file(text, filename)
-            self.tuples.append({"Audio File Name": filename, "Reference": text})
 
-    def synthesize_text_to_file(self, text, output_filename):
+            # voice_selection_mode=random 
+            # pick a random voice
+            if voice_selection_mode.lower() == "random" and voice_list[0]:
+                voice = random.choice(voice_list)
+                filename = f'{output_dir}/{line[0]}-{voice}.{type}'
+                self.synthesize_text_to_file(text, filename, voice)
+                self.tuples.append({"Audio File Name": filename, "Reference": text})
+
+            # voice_selection_mode=all
+            # loop through all voices and create a new file for each one
+            # add voice name to each filename
+            elif voice_selection_mode.lower() == "all" and voice_list[0]:
+                for element in voice_list:
+                    filename = f'{output_dir}/{line[0]}-{element}.{type}'
+                    self.synthesize_text_to_file(text, filename, element)
+                    self.tuples.append({"Audio File Name": filename, "Reference": text})
+
+            elif not voice_list[0]:
+                print("Error: invalid voice")
+            elif voice_selection_mode.lower() != "all" or voice_selection_mode.lower() != "random":
+                print("Error: invalid voice_selection_mode")
+
+    def synthesize_text_to_file(self, text, output_filename, voice):
         overwrite = self.config.getBoolean("Synthesis", "overwrite")
         if overwrite is False:
             if os.path.isfile(output_filename) and os.path.getsize(output_filename) > 0:
                 print("{} already exists, will not overwrite".format(output_filename))
                 return
 
-        voice            = self.config.getValue("TextToSpeech", "voice")
+
         customization_id = self.config.getValue("TextToSpeech", "customization_id")
         type             = self.config.getValue("Synthesis", "output_file_type")
 
