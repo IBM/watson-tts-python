@@ -29,9 +29,15 @@ class Synthesizer:
         voice            = self.config.getValue("TextToSpeech", "voice")
         voice_selection_mode            = self.config.getValue("TextToSpeech", "voice_selection_mode")
         
-        if voice_selection_mode == "":
+        if voice_selection_mode == "" or not voice_selection_mode:
             voice_selection_mode = "all"
-        voice_list = voice.split(",")
+
+        if voice == "" or not voice:
+                print("Error: invalid voice")
+        else:
+            voice_list = voice.split(",")
+
+        
 
         os.makedirs(output_dir, exist_ok=True)
 
@@ -56,8 +62,10 @@ class Synthesizer:
                     self.synthesize_text_to_file(text, filename, element)
                     self.tuples.append({"Audio File Name": filename, "Reference": text})
 
-            else:
-                print("Error: voice is empty")
+            elif not voice_list[0]:
+                print("Error: invalid voice")
+            elif voice_selection_mode.lower() != "all" or voice_selection_mode.lower() != "random":
+                print("Error: invalid voice_selection_mode")
 
     def synthesize_text_to_file(self, text, output_filename, voice):
         overwrite = self.config.getBoolean("Synthesis", "overwrite")
