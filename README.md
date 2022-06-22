@@ -82,7 +82,7 @@ reference_transcriptions_file=reference_transcriptions.csv
 ```
 
 ## pronounce.py
-Takes an input file with one word/word phrase per line and generates pronunciations.  Global configuration is updated in `config.ini` file.    The output file from this process is suitable for passing as an input file to `synthesize.py`.
+Takes an input file with one word/word phrase per line and generates pronunciations.  Global configuration is updated in `config.ini` file. Note, If `voice` is set to multiple voices, only the first one will be used. The output file from this process is suitable for passing as an input file to `synthesize.py`.
 
 Example input file:
 ```
