@@ -25,7 +25,8 @@ class Pronouncer:
 
         num_total        = len(data)
         num_pronounced   = 0
-        voice            = self.config.getValue("TextToSpeech", "voice")
+        # use the first voice in the list
+        voice            = self.config.getValue("TextToSpeech", "voice").split(",")[0]
         customization_id = self.config.getValue("TextToSpeech", "customization_id")
         phonetic         = self.config.getValue("Pronunciation", "phonetic")
 
