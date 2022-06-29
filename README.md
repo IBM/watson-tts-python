@@ -145,3 +145,34 @@ extract_dialog = True
 extract_intents = False
 extract_entities = False
 ```
+
+## Utility Scripts
+### add_acronym_pronounce_to_json.py
+Process a csv of acronyms and translate them, e.g. IBM -> I B M,  
+Then add the tranlations to an existing custom words TTS json file.  
+Sample script execution: `python add_acronym_pronounce_to_json.py test_terms.csv CustomWords.json`
+
+### add_word_phonetic_to_json.py
+Parse phonetic pronunciations from the csv output file from `pronounce.py`  
+Then add the tranlations to an existing custom words TTS json file.  
+Sample script execution: `python add_word_phonetic_to_json.py tts_pronounce.csv CustomWords.json`
+
+### addWordsFromJSON.py
+Add the words and translations in a json file to a custom word model.  
+Sample script execution: `python addWordsFromJSON.py config.ini CustomWords.json`
+
+### createCustomModel.py
+Create a new empty custom model.  
+Sample script execution: `python createCustomModel.py config.ini "custom model1" en-US "Custom model for testing the latest changes"`
+
+### getCustomModel.py
+Get the details of the custom word model.  
+Sample script execution: `python getCustomModel.py config.ini`
+
+### listWords.py
+List the words and translations of the custom word model.  
+Sample script execution: `python listWords.py config.ini`
+
+### problematic_word_extraction.py
+Extract potentially problematic words for TTS from a CSV using a spell checker. Then divide the words up into separate files based on punctuation found in the words.  
+Sample script execustion: `python problematic_word_extraction.py messages.csv`
