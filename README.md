@@ -165,6 +165,14 @@ Sample script execution: `python addWordsFromJSON.py config.ini CustomWords.json
 Create a new empty custom model.  
 Sample script execution: `python createCustomModel.py config.ini "custom model1" en-US "Custom model for testing the latest changes"`
 
+### deleteAllWords.py
+Delete all the words in the custom word model.  
+Sample script execution: `python deleteAllWords.py config.ini`
+
+### deleteCustomModel.py
+Delete the custom model.  
+Sample script execution: `python deleteCustomModel.py config.ini`
+
 ### getCustomModel.py
 Get the details of the custom word model.  
 Sample script execution: `python getCustomModel.py config.ini`
