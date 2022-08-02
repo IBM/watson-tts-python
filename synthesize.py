@@ -4,6 +4,7 @@ import sys
 import csv
 import random
 from config import Config
+from html_table import HTMLTable
 
 from watson_objects import WatsonObjects
 
@@ -94,6 +95,16 @@ class Synthesizer:
 
     def report(self):
         print("Wrote {} syntheses".format(self.synthesis_count))
+        #"Audio File Name"
+        #self.tuples[0]["Reference"]
+        generate_html_to = self.config.getValue("TextToSpeech", "generate_html_to")
+        if generate_html_to:
+            html_table = HTMLTable(generate_html_to)
+            html_table.create()
+            for t in self.tuples:
+                row = t["Reference"] + ';;' + t['Audio File Name']
+                html_table.add_row(row, ';;')
+            html_table.close()
 
         reference_transcriptions_file = self.config.getValue("Synthesis", "reference_transcriptions_file")
         if reference_transcriptions_file:
