@@ -95,8 +95,7 @@ class Synthesizer:
 
     def report(self):
         print("Wrote {} syntheses".format(self.synthesis_count))
-        #"Audio File Name"
-        #self.tuples[0]["Reference"]
+
         generate_html_to = self.config.getValue("TextToSpeech", "generate_html_to")
         if generate_html_to:
             html_table = HTMLTable(generate_html_to)
