@@ -101,7 +101,7 @@ class Synthesizer:
             html_table = HTMLTable(generate_html_to)
             html_table.create()
             for t in self.tuples:
-                row = t["Reference"] + ';;' + t['Audio File Name']
+                row = t["Reference"] + ';;' + t['Audio File Name'] + ';;' + (t['Audio File Name'] + ' ')
                 html_table.add_row(row, ';;')
             html_table.close()
 
