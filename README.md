@@ -39,6 +39,13 @@ cd /Applications/Python 3.6
 
 ## synthesize.py
 Takes an input CSV file with IDs and text, synthesizes each text into an audio file as specified by the ID.  Global configuration is updated in `config.ini` file.
+    
+When generate_html_to is set in [TextToSpeech] section of the config file e.g.
+
+    [TextToSpeech]
+    generate_html_to = html_with_embedded_audio.html
+
+html_with_embedded_audio.html file will be created.
 
 Example input file:
 
