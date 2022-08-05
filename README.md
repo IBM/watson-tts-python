@@ -4,6 +4,15 @@ TTS Python tools to assist customers in experimentation and configuration
 Some sample files are available under the "template-samples" sub-folder.
 There is an evaluation template spreadsheet to help document feedback from reviewers
 
+## More documentation
+This readme describes the tools in depth.  For more information on use cases and methodology, please see the following articles:
+* [How To Properly Plan and Configure Watson Text to Speech in an IVR](https://medium.com/ibm-watson-speech-services/how-to-properly-plan-and-configure-watson-text-to-speech-in-an-ivr-77bc563aa23b)
+* [New Speech Testing Utilities for Conversational AI Projects](https://medium.com/ibm-watson-speech-services/new-speech-testing-utilities-for-conversational-ai-projects-bf73debe19be)
+* [Tune by Example: How to Tune Watson Text to Speech for Better Intonations](https://medium.com/ibm-watson-speech-services/tune-by-example-how-to-tune-watson-text-to-speech-for-better-intonations-bcee8404d927)
+
+You may also find useful:
+* [STT-WER-Python](https://github.com/IBM/watson-stt-wer-python) - companion tooling for IBM Speech to Text
+
 ## Installation
 Requires Python 3.x installation.
 
@@ -30,6 +39,13 @@ cd /Applications/Python 3.6
 
 ## synthesize.py
 Takes an input CSV file with IDs and text, synthesizes each text into an audio file as specified by the ID.  Global configuration is updated in `config.ini` file.
+    
+When generate_html_to is set in [TextToSpeech] section of the config file e.g.
+
+    [TextToSpeech]
+    generate_html_to = html_with_embedded_audio.html
+
+html_with_embedded_audio.html file will be created.
 
 Example input file:
 
