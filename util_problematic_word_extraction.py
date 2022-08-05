@@ -4,6 +4,7 @@
 import pandas as pd
 # may need to do a 'pip install pyspellchecker'
 from spellchecker import SpellChecker 
+# https://pyspellchecker.readthedocs.io/en/latest/
 import sys
 
 # python problematic_word_extraction.py messages.csv
@@ -48,7 +49,7 @@ dash_list = []
 slash_list =[]
 pound_list = []
 colon_list = []
-parnthesis_list = []
+parenthesis_list = []
 percent_list = []
 apostrophy_list = []
 leftover_list = []
@@ -63,7 +64,7 @@ for item in word_list:
     elif ":" in item:
         colon_list.append(item)
     elif "(" in item or ")" in item:
-        parnthesis_list.append(item)
+        parenthesis_list.append(item)
     elif "%" in item:
         percent_list.append(item)
     elif "'" in item:
@@ -75,11 +76,11 @@ print("Length of dash list is: ", len(dash_list))
 print("Length of slash list is: ", len(slash_list)) 
 print("Length of pound list is: ", len(pound_list))
 print("Length of colon list is: ", len(colon_list))
-print("Length of parenthesis list is: ", len(parnthesis_list))
+print("Length of parenthesis list is: ", len(parenthesis_list))
 print("Length of percent list is: ", len(percent_list))
 print("Length of apostropy list is: ", len(apostrophy_list))
 print("Length of leftover list is: ", len(leftover_list))
-total = (len(dash_list)+len(slash_list)+len(pound_list)+len(colon_list)+len(parnthesis_list)+len(percent_list)+len(apostrophy_list)+len(leftover_list))
+total = (len(dash_list)+len(slash_list)+len(pound_list)+len(colon_list)+len(parenthesis_list)+len(percent_list)+len(apostrophy_list)+len(leftover_list))
 print("Total Length of all lists is: ", total )
 
 # Write lists to csvs
@@ -100,7 +101,7 @@ with open ('colon_list.csv', 'w') as f:
         f.write("%s\n" % item)
 
 with open ('parenthesis_list.csv', 'w') as f:
-    for item in parnthesis_list:
+    for item in parenthesis_list:
         f.write("%s\n" % item)
     
 with open ('percent_list.csv', 'w') as f:

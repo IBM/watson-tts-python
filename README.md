@@ -146,41 +146,66 @@ extract_intents = False
 extract_entities = False
 ```
 
+## Model training
+The `models.py` script has wrappers for many model-related tasks including creating and deleting models and adding and deleting words.
+
+### Setup
+Update the parameters in your `config.ini` file.
+
+Required configuration parameters:
+* apikey - API key for your Speech to Text instance
+* service_url - Reference URL for your Speech to Text instance
+
+## Execution
+For general help, execute:
+```
+python models.py
+```
+
+The script requires a type (one of custom_model or word) and an operation (one of list,get,create,delete,reset)
+The script optionally takes a config file as an argument with `-c config_file_name_goes_here`, otherwise using a default file of `config.ini` which contains the connection details for your speech to text instance.
+Depending on the specified operation, the script also accepts a name, description, and file for an associated resource.  For instance, new custom models should have a name and description.
+
+## Examples
+
+List all custom models:
+```
+python models.py -o list -t custom_model
+```
+
+Create a custom model:
+```
+python models.py -o create -t custom_model -n "model1" -d "my first model -l "en-US"
+```
+
+Reset a custom model (delete all the words from the model):
+```
+python models.py -o reset -t custom_model
+```
+
+Add words from a JSON file:
+```
+python models.py -o create -t word -f CustomWords.json
+```
+
+Note some parameter combinations are not possible.  The operations supported all wrap the SDK methods documented at https://cloud.ibm.com/apidocs/text-to-speech.
+
+
 ## Utility Scripts
-### add_acronym_pronounce_to_json.py
+### util_add_acronym_pronounce_to_json.py
 Process a csv of acronyms and translate them, e.g. IBM -> I B M,  
 Then add the tranlations to an existing custom words TTS json file.  
-Sample script execution: `python add_acronym_pronounce_to_json.py test_terms.csv CustomWords.json`
+Sample script execution: `python util_add_acronym_pronounce_to_json.py test_terms.csv CustomWords.json`
 
-### add_word_phonetic_to_json.py
+### util_add_word_phonetic_to_json.py
 Parse phonetic pronunciations from the csv output file from `pronounce.py`  
 Then add the tranlations to an existing custom words TTS json file.  
-Sample script execution: `python add_word_phonetic_to_json.py tts_pronounce.csv CustomWords.json`
+Sample script execution: `python util_add_word_phonetic_to_json.py tts_pronounce.csv CustomWords.json`
 
-### addWordsFromJSON.py
-Add the words and translations in a json file to a custom word model.  
-Sample script execution: `python addWordsFromJSON.py config.ini CustomWords.json`
+### util_create_synthesis_input_file.py
+Create a synthesis input csv file from a csv file of words to synthesize.
+Sample script execution: `python util_createSynthesisInputFile.py words.csv inputfile_to_synthesize.csv `
 
-### createCustomModel.py
-Create a new empty custom model.  
-Sample script execution: `python createCustomModel.py config.ini "custom model1" en-US "Custom model for testing the latest changes"`
-
-### deleteAllWords.py
-Delete all the words in the custom word model.  
-Sample script execution: `python deleteAllWords.py config.ini`
-
-### deleteCustomModel.py
-Delete the custom model.  
-Sample script execution: `python deleteCustomModel.py config.ini`
-
-### getCustomModel.py
-Get the details of the custom word model.  
-Sample script execution: `python getCustomModel.py config.ini`
-
-### listWords.py
-List the words and translations of the custom word model.  
-Sample script execution: `python listWords.py config.ini`
-
-### problematic_word_extraction.py
+### util_problematic_word_extraction.py
 Extract potentially problematic words for TTS from a CSV using a spell checker. Then divide the words up into separate files based on punctuation found in the words.  
-Sample script execustion: `python problematic_word_extraction.py messages.csv`
+Sample script execution: `python util_problematic_word_extraction.py messages.csv`
