@@ -1,10 +1,18 @@
-# Use csv of acronyms and translate, e.g. IBM -> I B M,
-# Add tranlations to existing custom words TTS json file
+# This utility will create simple translations for acronyms and add them as new words to an existing custom words TTS json file.
+# The simple translation is to add spaces between the letters and a comma at the end, e.g. IBM -> I B M,
+# This utility requires an existing words json file.
+
+# Inputs:
+# first: a single column csv file with one acronym in each row
+# second: the filename of an existing custom words TTS json to be updated with the acronyms and their translations
+
+# Output:
+# The existing custom words TTS json file will be updated with a new word and its translation for each acronym from the input csv. 
+
+# Sample script execution: python util_add_acronym_pronounce_to_json.py test_terms.csv CustomWords.json
 
 import json
 import sys
-
-# python add_acronym_pronounce_to_json.py test_terms.csv CustomWords.json
 
 terms_filename = sys.argv[1]
 custom_words_json_filename = sys.argv[2]

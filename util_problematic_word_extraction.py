@@ -1,5 +1,28 @@
-# Extract potentially problematic words for TTS from a CSV using a spell checker
-# Divide the words up into separate files by punctuation
+# This utility will extract potentially problematic words for TTS using a spell checker. 
+# The problematic words will then be filtered into separate files based on the punctuation contained in the words.
+# e.g. "he/she" -> slash_list.csv
+# This utility can be useful if have a lot of words/messages to test and you wish to bootstrap your custom TTS model with potentially problematic words.
+# The other utility scripts can then be used to update an existing custom TTS words model with these problematic words. See:
+# util_add_acronym_pronounce_to_json.py
+# util_add_word_phonetic_to_json.py
+# util_create_synthesis_input_file.py
+
+# Inputs:
+# first: A single column csv file with one word/message per row
+# second: Language code. See supported list of languages here: https://pyspellchecker.readthedocs.io/en/latest/#non-english-dictionaries
+
+# Output: 
+# CSV files containing lists of words/messages based on their punctuation. 
+# dash_list.csv
+# slash_list.csv
+# pound_list.csv
+# colon_list.csv
+# parenthesis_list.csv
+# percent_list.csv
+# apostropy_list.csv
+# leftover_list.csv
+
+# Sample script execution: python util_problematic_word_extraction.py messages.csv en
 
 import pandas as pd
 # may need to do a 'pip install pyspellchecker'
@@ -7,16 +30,17 @@ from spellchecker import SpellChecker
 # https://pyspellchecker.readthedocs.io/en/latest/
 import sys
 
-# python problematic_word_extraction.py messages.csv
+filename = sys.argv[1]
+lang = sys.argv[2]
 
-spell = SpellChecker()
+spell = SpellChecker(language=lang)
 content_abbr_dict = dict()
 content_abbr_count = dict()
 content_abbr_dup_list = []
 total_abbr=0
 word_list = []
 
-filename = sys.argv[1]
+
     
 if 'xlsx' in filename:
     messages = pd.read_excel(filename)

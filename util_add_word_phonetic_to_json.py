@@ -1,11 +1,18 @@
-# Parse phonetic pronunciations from TTS pronounce csv
-# Add tranlations to existing custom words TTS json file
+# This utility will take the output csv file from the pronounce.py script and add its new words to an existing custom words TTS json file.
+# This utility requires an existing words json file.
+
+# Inputs:
+# first: the csv output from the pronounce.py script
+# second: the filename of an existing words json to be updated with the words and their pronunciation translations
+
+# Output:
+# The existing custom words TTS json file will be updated with a new word and its translation for each pronunciation from the input csv. 
+
+# Sample script execution: python util_add_word_phonetic_to_json.py tts_pronounce.csv CustomWords.json
 
 import json
 import sys
 import re
-
-# python add_word_phonetic_to_json.py tts_pronounce.csv CustomWords.json
 
 pronounce_filename = sys.argv[1]
 custom_words_json_filename = sys.argv[2]

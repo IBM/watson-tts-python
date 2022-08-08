@@ -208,20 +208,71 @@ Note some parameter combinations are not possible.  The operations supported all
 
 
 ## Utility Scripts
+### util_problematic_word_extraction.py
+This utility will extract potentially problematic words for TTS using a spell checker.
+The problematic words will then be filtered into separate files based on the punctuation contained in the words.
+e.g. "he/she" -> slash_list.csv  
+This utility can be useful if have a lot of words/messages to test and you wish to bootstrap your custom TTS model with potentially problematic words.
+The other utility scripts can then be used to update an existing custom TTS words model with these problematic words. See:  
+`util_add_acronym_pronounce_to_json.py`  
+`util_add_word_phonetic_to_json.py`  
+`util_create_synthesis_input_file.py`  
+
+Inputs:  
+first: A single column csv file with one word/message per row  
+second: Language code. See supported list of languages here: https://pyspellchecker.readthedocs.io/en/latest/#non-english-dictionaries  
+
+Output:  
+CSV files containing lists of words/messages based on their punctuation.  
+`dash_list.csv`  `
+`slash_list.csv`  
+`pound_list.csv`  
+`colon_list.csv`  
+`parenthesis_list.csv`  
+`percent_list.csv`  
+`apostropy_list.csv`  
+`leftover_list.csv`  
+
+Sample script execution: `python util_problematic_word_extraction.py messages.csv en`  
 ### util_add_acronym_pronounce_to_json.py
-Process a csv of acronyms and translate them, e.g. IBM -> I B M,  
-Then add the tranlations to an existing custom words TTS json file.  
-Sample script execution: `python util_add_acronym_pronounce_to_json.py test_terms.csv CustomWords.json`
+This utility will create simple translations for acronyms and add them as new words to an existing custom words TTS json file.
+The simple translation is to add spaces between the letters and a comma at the end, e.g. IBM -> I B M,
+This utility requires an existing words json file.  
+
+Inputs:  
+first: a single column csv file with one acronym in each row  
+second: the filename of an existing custom words TTS json to be updated with the acronyms and their translations  
+
+Output:  
+The existing custom words TTS json file will be updated with a new word and its translation for each acronym from the input csv.  
+
+Sample script execution: `python util_add_acronym_pronounce_to_json.py test_terms.csv CustomWords.json`  
 
 ### util_add_word_phonetic_to_json.py
-Parse phonetic pronunciations from the csv output file from `pronounce.py`  
-Then add the tranlations to an existing custom words TTS json file.  
-Sample script execution: `python util_add_word_phonetic_to_json.py tts_pronounce.csv CustomWords.json`
+This utility will take the output csv file from the `pronounce.py` script and add its new words to an existing custom words TTS json file.
+This utility requires an existing words json file.  
+
+Inputs:  
+first: the csv output from the `pronounce.py` script  
+second: the filename of an existing words json to be updated with the words and their pronunciation translations  
+
+Output:  
+The existing custom words TTS json file will be updated with a new word and its translation for each pronunciation from the input csv.  
+
+Sample script execution: `python util_add_word_phonetic_to_json.py tts_pronounce.csv CustomWords.json`  
 
 ### util_create_synthesis_input_file.py
-Create a synthesis input csv file from a csv file of words to synthesize.
-Sample script execution: `python util_createSynthesisInputFile.py words.csv inputfile_to_synthesize.csv `
+This utility will create the synthesis input csv file for the `synthesis.py` script using a csv file with words/messages.
+This utility can be useful if you have a spreadsheet with words/messages that you want to test your TTS model audios with.  
 
-### util_problematic_word_extraction.py
-Extract potentially problematic words for TTS from a CSV using a spell checker. Then divide the words up into separate files based on punctuation found in the words.  
-Sample script execution: `python util_problematic_word_extraction.py messages.csv`
+Inputs:  
+first: A single column csv file with one word/message per row  
+Note: The first row of the csv must be a single entry of "words"  
+second: A filename for the synthesis csv  
+Note: The audio filename column in the synthesis csv will be set to the row number of the input csv  
+
+Output:  
+A csv file formatted correctly to be used as an input to `synthesis.py`  
+
+Sample script execution: `python util_create_synthesis_input_file.py messages.csv inputfile_to_synthesize.csv`
+
