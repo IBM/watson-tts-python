@@ -9,7 +9,6 @@ from ibm_watson import TextToSpeechV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson import IAMTokenManager
 from ibm_cloud_sdk_core.authenticators import BearerTokenAuthenticator
-#from ibm_watson.text_to_speech_v1 import CustomWord
 
 from argparse import ArgumentParser
 
@@ -130,21 +129,18 @@ class ModelTool:
         # get list of words
         word_list = []
         words_raw = self.TTS.list_words(self.get_customization_id()).get_result()
-        # words_raw = text_to_speech.list_words(customization_id).get_result()
         for element in words_raw['words']:
             word_list.append(element['word'])
-        print("existing word list: ", word_list)
+        eprint(f"existing word list: {word_list}")
 
         # loop through deleting the words
         for word in word_list:
             self.TTS.delete_word(self.get_customization_id(), word)
-            # text_to_speech.delete_word(customization_id, word)
-            print("deleted word: ", word)
+            eprint(f"deleted word: {word}")
 
         # check
         words_raw = self.TTS.list_words(self.get_customization_id())
-        # words_raw = text_to_speech.list_words(customization_id).get_result()
-        print("new words list: ", words_raw.get_result())
+        eprint(f"new words list: {words_raw.get_result()}")
         return words_raw
 
     '''
