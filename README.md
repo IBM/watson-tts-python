@@ -267,7 +267,7 @@ This utility can be useful if you have a spreadsheet with words/messages that yo
 
 Inputs:  
 first: A single column csv file with one word/message per row. Header row titled `MSG`.
-Note: The first row of the csv must be a single entry of "words"  
+Note: The first row of the csv must be a single entry of "MSG"  
 second: A filename for the synthesis csv  
 Note: The audio filename column in the synthesis csv will be set to the row number of the input csv  
 
