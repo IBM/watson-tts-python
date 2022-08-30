@@ -86,7 +86,7 @@ class ModelTool:
 
     def get_type_custom_model_handlers(self):
         handlers = {}
-        handlers['list'  ] = self.TTS.list_custom_models
+        handlers['list'  ] = self.list_custom_models
         handlers['create'] = self.create_custom_model
         handlers['get'   ] = self.get_custom_model
         handlers['delete'] = self.delete_custom_model
@@ -94,8 +94,11 @@ class ModelTool:
        
         return handlers
 
+    def list_custom_models(self):
+        return self.TTS.list_custom_models()
+
     def get_custom_model(self):
-        return self.TTS.get_language_model(self.get_customization_id())
+        return self.TTS.get_custom_model(self.get_customization_id())
 
     def create_custom_model(self):
         model_name = self.ARGS.name
@@ -122,7 +125,7 @@ class ModelTool:
         return self.TTS.delete_custom_model(self.get_customization_id())
 
     def reset_custom_model(self):
-        # deleting all the words will essentiall "reset" the model
+        # deleting all the words will essentially "reset" the model
 
         # get list of words
         word_list = []
@@ -139,10 +142,10 @@ class ModelTool:
             print("deleted word: ", word)
 
         # check
-        words_raw = self.TTS.list_words(self.get_customization_id()).get_result()
+        words_raw = self.TTS.list_words(self.get_customization_id())
         # words_raw = text_to_speech.list_words(customization_id).get_result()
-        print("new words list: ", words_raw)
-        return None
+        print("new words list: ", words_raw.get_result())
+        return words_raw
 
     '''
     Custom word functions
