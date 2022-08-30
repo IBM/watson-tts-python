@@ -14,6 +14,16 @@ import json
 import sys
 import re
 
+if(len(sys.argv) < 3):
+    print("Error: Requires two positional arguments: input csv filename, and JSON file")
+    exit(2)
+
+def contains_term(word_list, term):
+    for word in word_list:
+        if word['word'] == term:
+            return True
+    return False
+
 pronounce_filename = sys.argv[1]
 custom_words_json_filename = sys.argv[2]
 
@@ -29,6 +39,9 @@ for item in pronounce_list[1:]:
     ph = ph_part.split("'")[3]
     word_raw = ph_part.split("'")[4]
     word = re.search(r'\>(.*?)\<',word_raw).group(1)
+
+    if(contains_term(json_data['words'], word)):
+        continue
     # using a list will ensure the backslashes are inserted into the json
     translation_list = ['<phoneme alphabet=', '"', alphabet, '" ', 'ph=', '"', ph, '..."></phoneme>']
     translation_str = ''
@@ -43,3 +56,5 @@ for item in pronounce_list[1:]:
 # update the json file
 with open(custom_words_json_filename, 'w') as outfile:
     json.dump(json_data, outfile)
+
+print(f"Added {len(pronounce_list)-1} words to {custom_words_json_filename}")
