@@ -1,5 +1,5 @@
 ibm_watson>=6.0.0
 configparser>=5.0.0
 IPython
-pandas>=1.4.2
+pandas>=1.0.0
 pyspellchecker>=0.6.3

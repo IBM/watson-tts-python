@@ -219,8 +219,8 @@ The other utility scripts can then be used to update an existing custom TTS word
 `util_create_synthesis_input_file.py`  
 
 Inputs:  
-first: A single column csv file with one word/message per row  
-second: Language code. See supported list of languages here: https://pyspellchecker.readthedocs.io/en/latest/#non-english-dictionaries  
+first: A single column csv file with one word/message per row. Header row titled `MSG`.
+second: Two-character language code. See supported list of languages here: https://pyspellchecker.readthedocs.io/en/latest/#non-english-dictionaries  
 
 Output:  
 CSV files containing lists of words/messages based on their punctuation.  

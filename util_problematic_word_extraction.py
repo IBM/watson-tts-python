@@ -30,6 +30,16 @@ from spellchecker import SpellChecker
 # https://pyspellchecker.readthedocs.io/en/latest/
 import sys
 
+def write_file(filename, contents):
+    with open (filename, 'w') as f:
+        for item in contents:
+            f.write("%s\n" % item)
+        print(f"Wrote {len(contents)} items to {filename}")
+
+if(len(sys.argv) < 3):
+    print("Error: Requires two positional arguments: input csv filename, and language code")
+    exit(2)
+
 filename = sys.argv[1]
 lang = sys.argv[2]
 
@@ -46,7 +56,7 @@ if 'xlsx' in filename:
     messages = pd.read_excel(filename)
 else:
     messages = pd.read_csv(filename)
-
+print(messages)
 messages = messages.dropna(subset=['MSG'])
 
 print("Number of messages: ", len(messages))
@@ -102,40 +112,17 @@ print("Length of pound list is: ", len(pound_list))
 print("Length of colon list is: ", len(colon_list))
 print("Length of parenthesis list is: ", len(parenthesis_list))
 print("Length of percent list is: ", len(percent_list))
-print("Length of apostropy list is: ", len(apostrophy_list))
+print("Length of apostrophy list is: ", len(apostrophy_list))
 print("Length of leftover list is: ", len(leftover_list))
 total = (len(dash_list)+len(slash_list)+len(pound_list)+len(colon_list)+len(parenthesis_list)+len(percent_list)+len(apostrophy_list)+len(leftover_list))
 print("Total Length of all lists is: ", total )
 
 # Write lists to csvs
-with open ('dash_list.csv', 'w') as f:
-    for item in dash_list:
-        f.write("%s\n" % item)
-
-with open ('slash_list.csv', 'w') as f:
-    for item in slash_list:
-        f.write("%s\n" % item)
-
-with open ('pound_list.csv', 'w') as f:
-    for item in pound_list:
-        f.write("%s\n" % item)
-
-with open ('colon_list.csv', 'w') as f:
-    for item in colon_list:
-        f.write("%s\n" % item)
-
-with open ('parenthesis_list.csv', 'w') as f:
-    for item in parenthesis_list:
-        f.write("%s\n" % item)
-    
-with open ('percent_list.csv', 'w') as f:
-    for item in percent_list:
-        f.write("%s\n" % item)
-
-with open ('apostropy_list.csv', 'w') as f:
-    for item in apostrophy_list:
-        f.write("%s\n" % item)
-
-with open ('leftover_list.csv', 'w') as f:
-    for item in leftover_list:
-        f.write("%s\n" % item)
+write_file('dash_list.csv', dash_list)
+write_file('slash_list.csv', slash_list)
+write_file('pound_list.csv', pound_list)
+write_file('colon_list.csv', colon_list)
+write_file('parenthesis_list.csv', parenthesis_list)
+write_file('percent_list.csv', percent_list)
+write_file('apostrophy_list.csv', apostrophy_list)
+write_file('leftover_list.csv', leftover_list)
