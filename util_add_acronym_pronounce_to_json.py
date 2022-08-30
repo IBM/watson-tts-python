@@ -14,6 +14,16 @@
 import json
 import sys
 
+if(len(sys.argv) < 3):
+    print("Error: Requires two positional arguments: input csv filename, and JSON file")
+    exit(2)
+
+def contains_term(word_list, term):
+    for word in word_list:
+        if word['word'] == term:
+            return True
+    return False
+
 terms_filename = sys.argv[1]
 custom_words_json_filename = sys.argv[2]
 
@@ -23,6 +33,9 @@ json_data = json.load(open(custom_words_json_filename))
 # loop through the list of acronyms
 for i in range(len(term_list)):
     term = term_list[i]
+    if(contains_term(json_data['words'], term)):
+        continue
+    
     translation_list = []
     # break out the letters in the acronym
     for t in term:
@@ -38,3 +51,5 @@ for i in range(len(term_list)):
 # update the json file
 with open(custom_words_json_filename, 'w') as outfile:
     json.dump(json_data, outfile)
+
+print(f"Added {len(term_list)} words to {custom_words_json_filename}")
