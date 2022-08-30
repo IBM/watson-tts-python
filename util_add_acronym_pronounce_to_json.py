@@ -41,7 +41,7 @@ for i in range(len(term_list)):
     for t in term:
         translation_list.append(t)
     # formulate the translation string
-    trans_string = " ".join(str(x) for x in translation_list)+","
+    trans_string = " ".join(str(x) for x in translation_list)
     # add translations to json data
     json_data['words'].append({
     "translation": trans_string,
