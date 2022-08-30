@@ -56,7 +56,7 @@ if 'xlsx' in filename:
     messages = pd.read_excel(filename)
 else:
     messages = pd.read_csv(filename)
-print(messages)
+
 messages = messages.dropna(subset=['MSG'])
 
 print("Number of messages: ", len(messages))
