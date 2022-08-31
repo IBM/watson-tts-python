@@ -161,3 +161,118 @@ extract_dialog = True
 extract_intents = False
 extract_entities = False
 ```
+
+## Model training
+The `models.py` script has wrappers for many model-related tasks including creating and deleting models and adding and deleting words.
+
+### Setup
+Update the parameters in your `config.ini` file.
+
+Required configuration parameters:
+* apikey - API key for your Speech to Text instance
+* service_url - Reference URL for your Speech to Text instance
+
+## Execution
+For general help, execute:
+```
+python models.py
+```
+
+The script requires a type (one of custom_model or word) and an operation (one of list,get,create,delete,reset)
+The script optionally takes a config file as an argument with `-c config_file_name_goes_here`, otherwise using a default file of `config.ini` which contains the connection details for your speech to text instance.
+Depending on the specified operation, the script also accepts a name, description, and file for an associated resource.  For instance, new custom models should have a name and description.
+
+## Examples
+
+List all custom models:
+```
+python models.py -o list -t custom_model
+```
+
+Create a custom model:
+```
+python models.py -o create -t custom_model -n "model1" -d "my first model -l "en-US"
+```
+
+Reset a custom model (delete all the words from the model):
+```
+python models.py -o reset -t custom_model
+```
+
+Add words from a JSON file:
+```
+python models.py -o create -t word -f CustomWords.json
+```
+
+Note some parameter combinations are not possible.  The operations supported all wrap the SDK methods documented at https://cloud.ibm.com/apidocs/text-to-speech.
+
+
+## Utility Scripts
+### util_problematic_word_extraction.py
+This utility will extract potentially problematic words for TTS using a spell checker.
+The problematic words will then be filtered into separate files based on the punctuation contained in the words.
+e.g. "he/she" -> slash_list.csv  
+This utility can be useful if have a lot of words/messages to test and you wish to bootstrap your custom TTS model with potentially problematic words.
+The other utility scripts can then be used to update an existing custom TTS words model with these problematic words. See:  
+`util_add_acronym_pronounce_to_json.py`  
+`util_add_word_phonetic_to_json.py`  
+`util_create_synthesis_input_file.py`  
+
+Inputs:  
+first: A single column csv file with one word/message per row. Header row titled `MSG`.
+second: Two-character language code. See supported list of languages here: https://pyspellchecker.readthedocs.io/en/latest/#non-english-dictionaries  
+
+Output:  
+CSV files containing lists of words/messages based on their punctuation.  
+`dash_list.csv`  `
+`slash_list.csv`  
+`pound_list.csv`  
+`colon_list.csv`  
+`parenthesis_list.csv`  
+`percent_list.csv`  
+`apostropy_list.csv`  
+`leftover_list.csv`  
+
+Sample script execution: `python util_problematic_word_extraction.py messages.csv en`  
+### util_add_acronym_pronounce_to_json.py
+This utility will create simple translations for acronyms and add them as new words to an existing custom words TTS json file.
+The simple translation is to add spaces between the letters and a comma at the end, e.g. IBM -> I B M,
+This utility requires an existing words json file.  
+
+Inputs:  
+first: a single column csv file with one acronym in each row  
+second: the filename of an existing custom words TTS json to be updated with the acronyms and their translations  
+
+Output:  
+The existing custom words TTS json file will be updated with a new word and its translation for each acronym from the input csv.  
+
+Sample script execution: `python util_add_acronym_pronounce_to_json.py test_terms.csv CustomWords.json`  
+
+### util_add_word_phonetic_to_json.py
+This utility will take the output csv file from the `pronounce.py` script and add its new words to an existing custom words TTS json file.
+This utility requires an existing words json file.  
+
+Inputs:  
+first: the csv output from the `pronounce.py` script  
+second: the filename of an existing words json to be updated with the words and their pronunciation translations  
+
+Output:  
+The existing custom words TTS json file will be updated with a new word and its translation for each pronunciation from the input csv.  
+
+Sample script execution: `python util_add_word_phonetic_to_json.py tts_pronounce.csv CustomWords.json`  
+
+### util_create_synthesis_input_file.py
+This utility will create the synthesis input csv file for the `synthesis.py` script using a csv file with words/messages.
+This utility can be useful if you have a spreadsheet with words/messages that you want to test your TTS model audios with.  
+
+Inputs:  
+first: A single column csv file with one word/message per row. Header row titled `MSG`.
+Note: The first row of the csv must be a single entry of "MSG"  
+second: A filename for the synthesis csv  
+Note: The audio filename column in the synthesis csv will be set to the row number of the input csv  
+
+Output:  
+A csv file formatted correctly to be used as an input to `synthesis.py`  
+
+Sample script execution: `python util_create_synthesis_input_file.py messages.csv inputfile_to_synthesize.csv`
+

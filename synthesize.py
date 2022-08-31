@@ -80,18 +80,25 @@ class Synthesizer:
         type             = self.config.getValue("Synthesis", "output_file_type")
 
         with open(output_filename, 'wb') as audio_file:
-            try: 
-                audio_file.write(
-                    self.TTS.synthesize(
-                        text,
-                        voice=voice,
-                        accept='audio/' + type,
-                        customization_id=customization_id     
-                    ).get_result().content)
-                self.synthesis_count += 1
-                print("Wrote {}".format(output_filename))
-            except:
-                print(f"Error synthesizing for {output_filename} with text '{text}'")
+            # synthesize seems to have errors when processing large CSVs
+            # adding retry logic to retry up to 3 times
+            for attempt in range(3):
+                try: 
+                    audio_file.write(
+                        self.TTS.synthesize(
+                            text,
+                            voice=voice,
+                            accept='audio/' + type,
+                            customization_id=customization_id     
+                        ).get_result().content)
+                    self.synthesis_count += 1
+                    print("Wrote {}".format(output_filename))
+                except:
+                    print(f"Attempt {attempt} failed")
+                    print(f"Error synthesizing for {output_filename} with text '{text}'")
+                    print("Retrying...")
+                    continue
+                break
 
     def report(self):
         print("Wrote {} syntheses".format(self.synthesis_count))
