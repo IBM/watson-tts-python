@@ -53,8 +53,13 @@ class SkillExtractor:
 
             return tuples
 
-    def getIntentTextInSkill(self, data:json):
+    def getIntentTextInSkill(self, raw_data:json):
         interesting_text = []
+        data = raw_data
+        #Dialog skill has intents at root, Action skill puts them under 'workspace'
+        if 'workspace' in data:
+            data = data['workspace']
+
         if 'intents' in data:
             for node in data['intents']:
                 if 'examples' in node:
@@ -67,8 +72,13 @@ class SkillExtractor:
             tuples.append({'id': id, 'text':text})
         return tuples
 
-    def getEntityTextInSkill(self, data:json):
+    def getEntityTextInSkill(self, raw_data:json):
         interesting_text = []
+        data = raw_data
+        #Dialog skill has entities at root, Action skill puts them under 'workspace'
+        if 'workspace' in data:
+            data = data['workspace']
+
         #All entity examples and synonyms
         if 'entities' in data:
             for node in data['entities']:
@@ -87,43 +97,86 @@ class SkillExtractor:
         return tuples
 
     def getOutputTextInSkill(self, data:json):
+        #Dialog skill
+        if 'dialog_nodes' in data:
+            return self.getOutputTextInDialogSkill(data)
+        elif 'workspace' in data:
+            return self.getOutputTextInActionSkill(data)
+        else:
+            print('Unexpected format found in Watson Assistant skill.')
+            return None
+
+    def getOutputTextInDialogSkill(self, data:json):
         tuples = []
         dialog_node_list = data['dialog_nodes']
         for dialog_node in dialog_node_list:
             node_id = dialog_node.get('dialog_node')
+            tuples += self.getTextFromNode(dialog_node, node_id)
 
-            # Disabled nodes are not visible on the Web UI but can still exist in the skill
-            if dialog_node.get('disabled') == True or dialog_node.get('disabled') == 'true':
-                continue
+        return tuples
 
-            if 'output' not in dialog_node:
-                continue
+    def getOutputTextInActionSkill(self, data:json):
+        tuples = []
+        action_node_list = data['workspace']['actions']
+        for action_node in action_node_list:
+            for step_node in action_node['steps']:
+                node_id = action_node['action'] + "_" + step_node['step']
+                tuples += self.getTextFromNode(step_node, node_id)
+                for handler_node in step_node['handlers']:
+                    handler_node_id = node_id + "_" + handler_node['title']
+                    tuples += self.getTextFromNode(handler_node, handler_node_id)
 
-            out_node = dialog_node.get('output')
-            if 'generic' not in out_node:
-                continue
+        return tuples
 
-            for generic in out_node.get('generic'):
-                if 'values' in generic:
-                    values = generic.get('values')
-                    use_sequence = False
-                    sequence_no = 1
-                    if(len(values) > 1):
-                        use_sequence = True
-                    for value in values:
-                        text = value.get('text', None)
-                        if text is not None and len(text) > 0:
-                            #ID is the dialog_node_id, unless that node has multiple responses, in which case we serialize them separately.
-                            id = node_id
-                            if use_sequence:
-                                id = f"{node_id}_{sequence_no}"
+    def getTextFromNode(self, dialog_node, node_id):
+        tuples = []
+        # Disabled nodes are not visible on the Web UI but can still exist in the skill
+        if dialog_node.get('disabled') == True or dialog_node.get('disabled') == 'true':
+            return tuples
 
-                            #Remove newlines from text for easier CSV parsing later.
-                            text = value.get('text')
+        if 'output' not in dialog_node:
+            return tuples
+
+        out_node = dialog_node.get('output')
+        if 'generic' not in out_node:
+            return tuples
+
+        for generic in out_node.get('generic'):
+            if 'values' in generic:
+                values = generic.get('values')
+                use_sequence = False
+                sequence_no = 1
+                if(len(values) > 1):
+                    use_sequence = True
+                for value in values:
+                    #Dialog main format, sometimes used by actions
+                    text = value.get('text', None)
+                    if text is not None and len(text) > 0:
+                        #ID is the dialog_node_id, unless that node has multiple responses, in which case we serialize them separately.
+                        id = node_id
+                        if use_sequence:
+                            id = f"{node_id}_{sequence_no}"
+
+                        #Remove newlines from text for easier CSV parsing later.
+                        text = value.get('text')
+                        text = "".join(l for l in text.splitlines() if l)
+
+                        tuples.append({'id': id, 'text':text})
+
+                    #Action-specific format
+                    text_expr_node = value.get('text_expression', None)
+                    if text_expr_node is not None and 'concat' in text_expr_node:
+                        #text_expression has concat array of {'scalar':text_value}
+                        concat_sequence_no = 1
+                        for concat_node in text_expr_node['concat']:
+                            id = f"{node_id}_{sequence_no}"
+                            text = concat_node.get('scalar')
                             text = "".join(l for l in text.splitlines() if l)
 
                             tuples.append({'id': id, 'text':text})
-                        sequence_no += 1
+                            concat_sequence_no += 1
+
+                    sequence_no += 1
 
         return tuples
 
