@@ -8,7 +8,7 @@ import html
 class HTMLTable:
 
     def __init__(self, fileName):
-        self.ffout = open(fileName, "wt")
+        self.ffout = open(fileName, "wt", encoding='utf-8-sig')
 
     def create(self):
         self.ffout.write("<!DOCTYPE html>\n")

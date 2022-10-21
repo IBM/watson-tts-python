@@ -21,15 +21,15 @@ class Synthesizer:
 
     def synthesize(self, input_file):
         data = []
-        with open(input_file) as file:
+        with open(input_file, encoding='utf-8-sig') as file:
             reader = csv.reader(file)
             data = [tuple(row) for row in reader if row]
-        
+
         type       = self.config.getValue("Synthesis", "output_file_type")
         output_dir = self.config.getValue("Synthesis", "output_dir")
         voice            = self.config.getValue("TextToSpeech", "voice")
         voice_selection_mode            = self.config.getValue("TextToSpeech", "voice_selection_mode")
-        
+
         if voice_selection_mode == "" or not voice_selection_mode:
             voice_selection_mode = "all"
 
@@ -38,7 +38,7 @@ class Synthesizer:
         else:
             voice_list = voice.split(",")
 
-        
+
 
         os.makedirs(output_dir, exist_ok=True)
 
@@ -46,7 +46,7 @@ class Synthesizer:
             if line[0]=='id': continue #Ignore header row
             text = line[1]
 
-            # voice_selection_mode=random 
+            # voice_selection_mode=random
             # pick a random voice
             if voice_selection_mode.lower() == "random" and voice_list[0]:
                 voice = random.choice(voice_list)
@@ -83,13 +83,13 @@ class Synthesizer:
             # synthesize seems to have errors when processing large CSVs
             # adding retry logic to retry up to 3 times
             for attempt in range(3):
-                try: 
+                try:
                     audio_file.write(
                         self.TTS.synthesize(
                             text,
                             voice=voice,
                             accept='audio/' + type,
-                            customization_id=customization_id     
+                            customization_id=customization_id
                         ).get_result().content)
                     self.synthesis_count += 1
                     print("Wrote {}".format(output_filename))
@@ -117,7 +117,7 @@ class Synthesizer:
         if reference_transcriptions_file:
             keys = self.tuples[0].keys()
 
-            with open(reference_transcriptions_file, 'w', newline='') as output_file:
+            with open(reference_transcriptions_file, 'w', newline='', encoding='utf-8-sig') as output_file:
                 dict_writer = csv.DictWriter(output_file, keys)
                 dict_writer.writeheader()
                 dict_writer.writerows(self.tuples)
