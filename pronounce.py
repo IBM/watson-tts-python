@@ -50,8 +50,8 @@ class Pronouncer:
                 ssml_out = f"<speak version='1.0'><phoneme alphabet='{phonetic}' ph='{phoneme_sequence}'>{text}</phoneme></speak>"
                 self.pronunciations.append({'id':id, 'text':ssml_out})
                 print(f"  Pronounced \"{text}\" ({num_pronounced} of {num_total})")
-            except:
-                print(f"Error pronouncing \"{text}\" ({num_pronounced} of {num_total})")
+            except Exception as e:
+                print(f"Error pronouncing \"{text}\" ({num_pronounced} of {num_total})", e)
 
     def report(self):
         output_filename = self.config.getValue("Pronunciation", "output_file")

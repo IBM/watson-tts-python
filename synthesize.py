@@ -93,9 +93,9 @@ class Synthesizer:
                         ).get_result().content)
                     self.synthesis_count += 1
                     print("Wrote {}".format(output_filename))
-                except:
+                except Exception as e:
                     print(f"Attempt {attempt} failed")
-                    print(f"Error synthesizing for {output_filename} with text '{text}'")
+                    print(f"Error synthesizing for {output_filename} with text '{text}'", e)
                     print("Retrying...")
                     continue
                 break
