@@ -1,8 +1,10 @@
 [TextToSpeech]
 # Connection parameters to your Text to Speech instance
 apikey=xxxxxxxxx-xxxxx-xxxxx-xxxxxxxxxxx
+# add key 'bearer_token' if you have a bearer token directly, instead of using 'apikey'
 service_url=https://....
-# `use_bearer_token` is only True in Cloud Pak installations, False otherwise
+# use_bearer_token=False is for IBM cloud, uses apikey as an apikey
+# use_bearer_token=True is for Cloud Pak installs, instructs tool to use apikey to fetch a bearer_token
 use_bearer_token=False
 # Voices from https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices
 voice=en-US_MichaelV3Voice

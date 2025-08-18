@@ -28,10 +28,13 @@ class ModelTool:
 
     def createTTS(self):
         apikey            = self.config.getValue("TextToSpeech", "apikey")
+        bearer_token      = self.config.getValue("TextToSpeech", "bearer_token", None)
         url               = self.config.getValue("TextToSpeech", "service_url")
         use_bearer_token  = self.config.getBoolean("TextToSpeech", "use_bearer_token")
 
-        if use_bearer_token != True:
+        if bearer_token != None:
+            authenticator      = BearerTokenAuthenticator(bearer_token)
+        elif use_bearer_token != True:
             authenticator = IAMAuthenticator(apikey)
         else:
             iam_token_manager = IAMTokenManager(apikey=apikey)
