@@ -11,7 +11,7 @@ class Config:
     def getBoolean(self, section, key):
         return self.getValue(section, key) == "True"
 
-    def getValue(self, section, key):
+    def getValue(self, section, key, default_value=None):
         value = None
         if section in self.config:
            list = self.config[section]
