@@ -59,6 +59,7 @@ class ModelTool:
         # First key is type, second key is type
         # By genericizing the invocation, we can use common response handling below.
         type_handlers = {}
+        type_handlers['base_model'  ] = self.get_type_base_model_handlers
         type_handlers['custom_model'] = self.get_type_custom_model_handlers
         type_handlers['word'        ] = self.get_type_word_handlers
 
@@ -81,6 +82,23 @@ class ModelTool:
     # Most methods rely on the customization ID, we can abstract the config file from those methods
     def get_customization_id(self):
         return self.config.getValue("TextToSpeech", "customization_id")
+
+    '''
+    Base model functions
+    '''
+    def get_type_base_model_handlers(self):
+        handlers = {}
+        handlers['list'] = self.TTS.list_voices
+        handlers['get']  = self.get_voice
+
+        return handlers
+
+    def get_voice(self):
+        name = self.config.getValue("TextToSpeech", "voice")
+        if ARGS.name is not None:
+            name = ARGS.name
+
+        return self.TTS.get_voice(name)
 
     '''
     Custom model functions
@@ -190,7 +208,7 @@ def create_parser():
     parser = ArgumentParser(description='Run IBM Speech To Text model-related commands')
     parser.add_argument('-c', '--config_file', type=str, required=False, default="config.ini", help='Configuration file including connection details')
     parser.add_argument('-o', '--operation', type=str, required=True, choices=["list","get","create","delete","reset"], help="operation to perform")
-    parser.add_argument('-t', '--type', type=str, required=True, choices=["custom_model","word"], help="type the operation works on")
+    parser.add_argument('-t', '--type', type=str, required=True, choices=["base_model","custom_model","word"], help="type the operation works on")
     parser.add_argument('-n', '--name', type=str, required=False, help="name the operation works on, for instance 'MyModel' or 'word1'.")
     parser.add_argument('-d', '--description', type=str, required=False, help="description of the object being created; used only in create")
     parser.add_argument('-f', '--file', type=str, required=False, help="path to a file supporting the operation, for instance a word file")
