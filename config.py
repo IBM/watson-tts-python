@@ -1,8 +1,6 @@
 import configparser
 
 class Config:
-    config = None
-
     def __init__(self, config_file:str):
         # (interpolation=None) so that '%' is not treated like an environment variable
         self.config = configparser.ConfigParser(interpolation=None)
@@ -27,17 +25,12 @@ class Config:
         if section in self.config:
            self.config.set(section, key, value)
 
-    def writeFile(self, file_name:str):
-        with open(file_name, 'w') as configfile:
-            self.config.write(configfile)
-
-        #value = None
-        if section in self.config:
-           self.config.set(section, key, value)
-        return
-
     def writeFile(self, file:str):
-        #value = None
+        """
+        Write the current configuration to a file.
+
+        Args:
+            file (str): Path to the file where the configuration will be written.
+        """
         with open(file, 'w') as configfile:
             self.config.write(configfile)
-        return
