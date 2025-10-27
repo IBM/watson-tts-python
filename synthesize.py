@@ -25,16 +25,18 @@ class Synthesizer:
             reader = csv.reader(file)
             data = [tuple(row) for row in reader if row]
 
-        type       = self.config.getValue("Synthesis", "output_file_type")
-        output_dir = self.config.getValue("Synthesis", "output_dir")
-        voice            = self.config.getValue("TextToSpeech", "voice")
-        voice_selection_mode            = self.config.getValue("TextToSpeech", "voice_selection_mode")
+        type                 = self.config.getValue("Synthesis", "output_file_type")
+        output_dir           = self.config.getValue("Synthesis", "output_dir")
+        voice                = self.config.getValue("TextToSpeech", "voice")
+        voice_selection_mode = self.config.getValue("TextToSpeech", "voice_selection_mode")
+        voice_list           = []
 
         if voice_selection_mode == "" or not voice_selection_mode:
             voice_selection_mode = "all"
 
         if voice == "" or not voice:
-                print("Error: invalid voice")
+            print("Error: invalid voice")
+            exit(-1)
         else:
             voice_list = voice.split(",")
 
@@ -65,7 +67,7 @@ class Synthesizer:
 
             elif not voice_list[0]:
                 print("Error: invalid voice")
-            elif voice_selection_mode.lower() != "all" or voice_selection_mode.lower() != "random":
+            elif voice_selection_mode.lower() != "all" and voice_selection_mode.lower() != "random":
                 print("Error: invalid voice_selection_mode")
 
     def synthesize_text_to_file(self, text, output_filename, voice):
