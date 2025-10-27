@@ -123,8 +123,9 @@ class SkillExtractor:
                 node_id = action_node['action'] + "_" + step_node['step']
                 tuples += self.getTextFromNode(step_node, node_id)
                 for handler_node in step_node['handlers']:
-                    handler_node_id = node_id + "_" + handler_node['title']
-                    tuples += self.getTextFromNode(handler_node, handler_node_id)
+                    if 'title' in handler_node:
+                        handler_node_id = node_id + "_" + handler_node['title']
+                        tuples += self.getTextFromNode(handler_node, handler_node_id)
 
         return tuples
 
@@ -171,7 +172,8 @@ class SkillExtractor:
                         for concat_node in text_expr_node['concat']:
                             id = f"{node_id}_{sequence_no}"
                             text = concat_node.get('scalar')
-                            text = "".join(l for l in text.splitlines() if l)
+                            if(text):
+                                text = "".join(l for l in text.splitlines() if l)
 
                             tuples.append({'id': id, 'text':text})
                             concat_sequence_no += 1

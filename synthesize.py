@@ -9,21 +9,49 @@ from html_table import HTMLTable
 from watson_objects import WatsonObjects
 
 class Synthesizer:
+    """
+    A class for synthesizing text to speech using Watson TTS service.
+    """
 
     def __init__(self, config):
+        """
+        Initialize the Synthesizer with configuration.
+
+        Args:
+            config (Config): Configuration object containing TTS settings
+        """
         self.config = config
         self.TTS = self.createTTS()
         self.synthesis_count = 0
         self.tuples = []
 
     def createTTS(self):
+        """
+        Create and return a Watson Text-to-Speech service instance.
+
+        Returns:
+            TextToSpeechV1: Configured Watson TTS service instance
+        """
         return WatsonObjects(self.config).createTTS()
 
     def synthesize(self, input_file):
+        """
+        Synthesize text from a CSV input file to audio files.
+
+        Args:
+            input_file (str): Path to the CSV input file containing text to synthesize
+        """
         data = []
-        with open(input_file, encoding='utf-8-sig') as file:
-            reader = csv.reader(file)
-            data = [tuple(row) for row in reader if row]
+        try:
+            with open(input_file, encoding='utf-8-sig') as file:
+                reader = csv.reader(file)
+                data = [tuple(row) for row in reader if row]
+        except FileNotFoundError:
+            print(f"Error: Input file '{input_file}' not found")
+            return
+        except Exception as e:
+            print(f"Error reading input file '{input_file}': {e}")
+            return
 
         type                 = self.config.getValue("Synthesis", "output_file_type")
         output_dir           = self.config.getValue("Synthesis", "output_dir")
@@ -71,15 +99,23 @@ class Synthesizer:
                 print("Error: invalid voice_selection_mode")
 
     def synthesize_text_to_file(self, text, output_filename, voice):
+        """
+        Synthesize text to an audio file using the Watson TTS service.
+
+        Args:
+            text (str): The text to synthesize
+            output_filename (str): Path to the output audio file
+            voice (str): The voice to use for synthesis
+        """
         overwrite = self.config.getBoolean("Synthesis", "overwrite")
         if overwrite is False:
             if os.path.isfile(output_filename) and os.path.getsize(output_filename) > 0:
                 print("{} already exists, will not overwrite".format(output_filename))
                 return
 
-
         customization_id = self.config.getValue("TextToSpeech", "customization_id")
-        type             = self.config.getValue("Synthesis", "output_file_type")
+        # Use the file type from the filename extension instead of fetching again
+        type = output_filename.split('.')[-1]
 
         with open(output_filename, 'wb') as audio_file:
             # synthesize seems to have errors when processing large CSVs
@@ -103,27 +139,45 @@ class Synthesizer:
                 break
 
     def report(self):
+        """
+        Generate reports after synthesis is complete.
+
+        Creates HTML table and reference transcription files if configured.
+        """
         print("Wrote {} syntheses".format(self.synthesis_count))
 
+        # Skip reporting if no syntheses were performed
+        if not self.tuples:
+            print("No syntheses to report")
+            return
+
+        # Generate HTML report if configured
         generate_html_to = self.config.getValue("TextToSpeech", "generate_html_to")
         if generate_html_to:
-            html_table = HTMLTable(generate_html_to)
-            html_table.create()
-            for t in self.tuples:
-                row = t["Reference"] + ';;' + t['Audio File Name'] + \
-                      ';;' + (t['Audio File Name'] + ' ')
-                html_table.add_row(row, ';;')
-            html_table.close()
+            try:
+                html_table = HTMLTable(generate_html_to)
+                html_table.create()
+                for t in self.tuples:
+                    row = t["Reference"] + ';;' + t['Audio File Name'] + \
+                          ';;' + (t['Audio File Name'] + ' ')
+                    html_table.add_row(row, ';;')
+                html_table.close()
+                print(f"Generated HTML report at {generate_html_to}")
+            except Exception as e:
+                print(f"Error generating HTML report: {e}")
 
+        # Generate reference transcriptions file if configured
         reference_transcriptions_file = self.config.getValue("Synthesis", "reference_transcriptions_file")
         if reference_transcriptions_file:
-            keys = self.tuples[0].keys()
-
-            with open(reference_transcriptions_file, 'w', newline='', encoding='utf-8-sig') as output_file:
-                dict_writer = csv.DictWriter(output_file, keys)
-                dict_writer.writeheader()
-                dict_writer.writerows(self.tuples)
-                print(f"Wrote STT reference output to {reference_transcriptions_file}")
+            try:
+                keys = self.tuples[0].keys()
+                with open(reference_transcriptions_file, 'w', newline='', encoding='utf-8-sig') as output_file:
+                    dict_writer = csv.DictWriter(output_file, keys)
+                    dict_writer.writeheader()
+                    dict_writer.writerows(self.tuples)
+                    print(f"Wrote STT reference output to {reference_transcriptions_file}")
+            except Exception as e:
+                print(f"Error writing reference transcriptions file: {e}")
 
 def main():
     config_file = "config.ini"
